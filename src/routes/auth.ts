@@ -3,6 +3,7 @@ import { registerValidationRules, validate } from '../validators/validationServi
 import { models } from '../db';
 import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken';
+import i18n from 'i18n';
 
 const router: Router = Router();
 
@@ -18,7 +19,7 @@ export default () => {
         // Check if user already exists
         const existingUser = await User.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: i18n.__('user_already_exist')});
         }
 
         // Encrypt the password using CryptoJS and SECRET_KEY
@@ -36,7 +37,7 @@ export default () => {
         });
 
         return res.status(201).json({
-            message: 'User registered successfully',
+            message: i18n.__('registration_success'),
             userId: user.id
         });
     });

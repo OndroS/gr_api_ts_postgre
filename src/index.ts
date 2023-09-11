@@ -8,10 +8,13 @@ import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
 import AuthRouter from './routes/auth'
 import UserRouter from './routes/user'
+import { localizationMiddleware } from './middleware/localizationMiddleware'
 
 dotenv.config();
 
 const app = express()
+
+app.use(localizationMiddleware);
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
