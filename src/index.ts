@@ -9,6 +9,7 @@ import ExerciseRouter from './routes/exercises'
 import AuthRouter from './routes/auth'
 import UserRouter from './routes/user'
 import { localizationMiddleware } from './middleware/localizationMiddleware'
+import { errorHandlingMiddleware } from './middleware/errorHandling'
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ app.use('/programs', ProgramRouter())
 app.use('/exercises', ExerciseRouter())
 app.use('/auth', AuthRouter()); 
 app.use('/user', UserRouter()); 
+
+app.use(errorHandlingMiddleware);
 
 const httpServer = http.createServer(app)
 

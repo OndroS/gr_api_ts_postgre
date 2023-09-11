@@ -14,32 +14,36 @@ const {
 export default () => {
     // Registration Endpoint
     router.post('/register', registerValidationRules(), validate, async (req: Request, res: Response, _next: NextFunction) => {
-        const { name, surname, nickName, email, age, role, password } = req.body;
+        try {
+            const { name, surname, nickName, email, age, role, password } = req.body;
 
-        // Check if user already exists
-        const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) {
-            return res.status(400).json({ message: i18n.__('user_already_exist')});
+            // Check if user already exists
+            const existingUser = await User.findOne({ where: { email } });
+            if (existingUser) {
+                return res.status(400).json({ message: i18n.__('user_already_exist')});
+            }
+
+            // Encrypt the password using CryptoJS and SECRET_KEY
+            const encryptedPassword = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY!).toString();
+
+            // Create the user
+            const user = await User.create({
+                name,
+                surname,
+                nickName,
+                email,
+                age,
+                role,
+                password: encryptedPassword
+            });
+
+            return res.status(201).json({
+                message: i18n.__('registration_success'),
+                userId: user.id
+            });
+        } catch (error) {
+            _next(error);
         }
-
-        // Encrypt the password using CryptoJS and SECRET_KEY
-        const encryptedPassword = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY!).toString();
-
-        // Create the user
-        const user = await User.create({
-            name,
-            surname,
-            nickName,
-            email,
-            age,
-            role,
-            password: encryptedPassword
-        });
-
-        return res.status(201).json({
-            message: i18n.__('registration_success'),
-            userId: user.id
-        });
     });
 
     // Login Endpoint
