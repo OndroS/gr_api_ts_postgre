@@ -1,5 +1,13 @@
 {
     "registration_success": "Užívateľ úspešne zaregistrovaný",
     "user_already_exist": "Užívateľ už existuje",
-    "server_error": "Vyskytla sa chyba. Skúste to znova neskôr."
+    "server_error": "Vyskytla sa chyba. Skúste to znova neskôr.",
+    "auth_error" : "Neplatný email alebo heslo",
+    "auth_success" : "Úspešne prihlásený",
+    "get_exercises_success": "Zoznam cvičení",
+    "exercises_created": "Cvičenie bolo vytvorené",
+    "exercises_updated": "Cvičenie bolo aktualizované",
+    "exercises_deleted": "Cvičenie bolo vymazané",
+    "exercises_track_removed": "Cvičenie bolo odstránené zo zoznamu dokončených",
+    "user_updated": "Používateľ bol aktualizovaný"
 }

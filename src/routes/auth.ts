@@ -48,32 +48,36 @@ export default () => {
 
     // Login Endpoint
     router.post('/login', async (req: Request, res: Response, _next: NextFunction) => {
-        const { email, password } = req.body;
+        try {
+            const { email, password } = req.body;
 
-        // Check if user exists
-        const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password' });
+            // Check if user exists
+            const user = await User.findOne({ where: { email } });
+            if (!user) {
+                return res.status(400).json({ message: i18n.__('auth_error') });
+            }
+
+            // Decrypt the stored password using CryptoJS and SECRET_KEY
+            const bytes = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY!);
+            const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+
+            if (password !== decryptedPassword) {
+                return res.status(400).json({ message: i18n.__('auth_error') });
+            }
+
+            // Generate JWT token
+            const token = jwt.sign({ id: user.id, role: user.role }, process.env.SECRET_KEY as string, {
+                expiresIn: '1h'
+            });
+
+            return res.json({
+                message: i18n.__('auth_success'),
+                token,
+                role: user.role
+            });
+        } catch (error) {
+            _next(error);
         }
-
-        // Decrypt the stored password using CryptoJS and SECRET_KEY
-        const bytes = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY!);
-        const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
-
-        if (password !== decryptedPassword) {
-            return res.status(400).json({ message: 'Invalid email or password' });
-        }
-
-        // Generate JWT token
-        const token = jwt.sign({ id: user.id, role: user.role }, process.env.SECRET_KEY as string, {
-            expiresIn: '1h'
-        });
-
-        return res.json({
-            message: 'Logged in successfully',
-            token,
-            role: user.role
-        });
     });
 
     return router;

@@ -1,5 +1,13 @@
 {
     "registration_success": "User registered successfully",
     "user_already_exist": "User already exists",
-    "server_error": "An error occurred. Please try again later."
+    "server_error": "An error occurred. Please try again later.",
+    "auth_error" : "Invalid email or password",
+    "auth_success" : "Logged in successfully",
+    "get_exercises_success": "List of exercises",
+    "exercises_created": "Exercise created",
+    "exercises_updated": "Exercise updated",
+    "exercises_deleted": "Exercise deleted",
+    "exercises_track_removed": "Exercise removed from completed list",
+    "user_updated": "User was updated"
 }
