@@ -14,8 +14,8 @@ export function ensureAdmin(req: RequestWithUser, res: Response, next: NextFunct
 export function ensureUser(req: RequestWithUser, res: Response, next: NextFunction) {
     const user = req.user;
 
-    if (!user || user.role !== 'USER') {
-        return res.status(403).json({ message: 'Access forbidden: Users only' });
+    if (!user || (user.role !== 'USER' && user.role !== 'ADMIN')) {
+        return res.status(403).json({ message: 'Access forbidden: Users or Admins only' });
     }
 
     next();
