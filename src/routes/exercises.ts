@@ -1,4 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
+import { exerciseQueryValidationRules, validate } from '../validators/validationServices';
+import { Op } from 'sequelize';
 import { models } from '../db'
 import verify from '../middleware/verifyToken'
 import { ensureAdmin, ensureUser } from '../middleware/ensureRole'
@@ -14,19 +16,40 @@ const {
 
 export default () => {
     // Get all exercises
-    router.get('/exercises', verify, ensureUser, async (_req: Request, res: Response) => {
-        const exercises = await Exercise.findAll({
-            include: [{
-                model: Program,
-                as: 'program'
-            }]
-        });
-
-        return res.json({
-            data: exercises,
-            message: 'List of exercises'
-        });
-    });
+    router.get('/exercises', exerciseQueryValidationRules(), validate, verify, ensureUser, async (req: RequestWithUser, res: Response) => {
+		const page = parseInt(req.query.page as string) || 1; // Default to page 1 if not provided
+		const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page if not provided
+		const offset = (page - 1) * limit;
+	
+		const whereConditions: any = {};
+	
+		// Filter by programID
+		if (req.query.programID) {
+			whereConditions.programID = req.query.programID;
+		}
+	
+		// Full-text search on exercise name
+		if (req.query.search) {
+			whereConditions.name = {
+				[Op.iLike]: `%${req.query.search}%` // Using iLike for case-insensitive search
+			};
+		}
+	
+		const exercises = await Exercise.findAll({
+			where: whereConditions,
+			limit: limit,
+			offset: offset,
+			include: [{
+				model: Program,
+				as: 'program'
+			}]
+		});
+	
+		return res.json({
+			data: exercises,
+			message: 'List of exercises'
+		});
+	});
 
     // Create an exercise
     router.post('/exercises', verify, ensureAdmin, async (req: Request, res: Response) => {

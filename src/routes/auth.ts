@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { registerValidationRules, validate } from '../validators/validationServices';
 import { models } from '../db';
 import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken';
@@ -11,7 +12,7 @@ const {
 
 export default () => {
     // Registration Endpoint
-    router.post('/register', async (req: Request, res: Response, _next: NextFunction) => {
+    router.post('/register', registerValidationRules(), validate, async (req: Request, res: Response, _next: NextFunction) => {
         const { name, surname, nickName, email, age, role, password } = req.body;
 
         // Check if user already exists
