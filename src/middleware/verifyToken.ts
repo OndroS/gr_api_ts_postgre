@@ -1,18 +1,7 @@
 import jwt from 'jsonwebtoken';
+import { UserPayload, RequestWithUser } from '../types/auth';
 
 import { Request as ExpressRequest, Response, NextFunction } from 'express';
-
-interface UserPayload { // TODO: Finish definition
-  // Define the properties of the user payload here, for example:
-  id: number;
-  username: string;
-  // ... other properties
-}
-
-// Extend the Express Request type
-interface RequestWithUser extends ExpressRequest {
-  user?: UserPayload;
-}
 
 function verify(req: RequestWithUser, res: Response, next: NextFunction): void {
   const authHeader = req.headers.token as string | undefined;

@@ -45,7 +45,11 @@ export default (sequelize: Sequelize) => {
 				name: 'programID',
 				allowNull: false
 			},
-		})
+		});
+		(ExerciseModel as any).hasMany(models.UserExercise, {
+			foreignKey: 'exerciseId',
+			as: 'userExercise'
+		});
 	}
 
 	return ExerciseModel

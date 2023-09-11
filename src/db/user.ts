@@ -63,6 +63,15 @@ export default (sequelize: Sequelize) => {
         modelName: 'user'
     });
 
+    UserModel.associate = (models) => {
+		(UserModel as any).hasMany(models.UserExercise, {
+			foreignKey: {
+				name: 'exerciseId',
+				as: 'userExercise'
+			}
+		})
+	}
+
     return UserModel;
 }
 

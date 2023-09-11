@@ -1,6 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { models } from '../db';
-// import bcrypt from 'bcrypt';
 import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken';
 
@@ -66,7 +65,8 @@ export default () => {
 
         return res.json({
             message: 'Logged in successfully',
-            token
+            token,
+            role: user.role
         });
     });
 
