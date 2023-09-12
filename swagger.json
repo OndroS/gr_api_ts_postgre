@@ -1,0 +1,136 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Fitness API"
+    },
+    "host": "localhost:8000", 
+    "basePath": "/",
+    "schemes": ["http"],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "summary": "Register a new user",
+          "description": "Endpoint for user registration",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User registration details",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Register"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User registered successfully",
+              "schema": {
+                "$ref": "#/definitions/RegistrationResponse"
+              }
+            },
+            "400": {
+              "description": "Bad request, user already exists or validation error"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Login an existing user",
+          "description": "Endpoint for user login",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User login details",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Login"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User logged in successfully",
+              "schema": {
+                "$ref": "#/definitions/LoginResponse"
+              }
+            },
+            "400": {
+              "description": "Bad request, invalid email or password"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Register": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "nickName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["USER", "ADMIN"]
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "surname", "nickName", "email", "age", "role", "password"]
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["USER", "ADMIN"]
+          }
+        }
+      }
+    }
+  }

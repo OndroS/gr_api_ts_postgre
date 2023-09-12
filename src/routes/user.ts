@@ -57,7 +57,7 @@ export default () => {
     });
 
     // Get own profile data
-    router.get('/user/profile', verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
+    router.get('/users/profile', verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
         try {
             const user = await User.findByPk(req.user!.id, {
                 attributes: ['name', 'surname', 'age', 'nickName']

@@ -1,6 +1,8 @@
 import http from 'http'
 import express from 'express'
 import dotenv from 'dotenv'
+import swaggerUI from 'swagger-ui-express'
+import swaggerDocument from './../swagger.json'
 import * as bodyParser from 'body-parser'
 
 import { sequelize } from './db'
@@ -16,6 +18,8 @@ dotenv.config();
 const app = express()
 
 app.use(localizationMiddleware);
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
