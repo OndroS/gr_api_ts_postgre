@@ -13,7 +13,7 @@ const {
 
 export default () => {
     // Get all users
-    router.get('/users', verify, ensureAdmin, async (_req: Request, res: Response, _next: NextFunction) => {
+    router.get('/', verify, ensureAdmin, async (_req: Request, res: Response, _next: NextFunction) => {
         try {
             const users = await User.findAll();
             return res.json(users);
@@ -23,7 +23,7 @@ export default () => {
     });
 
     // Get user detail
-    router.get('/users/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
+    router.get('/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
         try {
             const { id } = req.params;
             const user = await User.findByPk(id);
@@ -34,7 +34,7 @@ export default () => {
     });
 
     // Update a user
-    router.put('/users/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
+    router.put('/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
         try {
             const { id } = req.params;
             await User.update(req.body, { where: { id } });
@@ -45,7 +45,7 @@ export default () => {
     });
 
     // Get all users (id, nickName)
-    router.get('/all', verify, ensureUser, async (_req: Request, res: Response, _next: NextFunction) => {
+    router.get('/users/all', verify, ensureUser, async (_req: Request, res: Response, _next: NextFunction) => {
         try {
             const users = await User.findAll({
                 attributes: ['id', 'nickName']
@@ -57,7 +57,7 @@ export default () => {
     });
 
     // Get own profile data
-    router.get('/profile', verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
+    router.get('/user/profile', verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
         try {
             const user = await User.findByPk(req.user!.id, {
                 attributes: ['name', 'surname', 'age', 'nickName']

@@ -17,7 +17,7 @@ const {
 
 export default () => {
     // Get all exercises
-    router.get('/exercises', exerciseQueryValidationRules(), validate, verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
+    router.get('/', exerciseQueryValidationRules(), validate, verify, ensureUser, async (req: RequestWithUser, res: Response, _next: NextFunction) => {
 		try {
             const page = parseInt(req.query.page as string) || 1; // Default to page 1 if not provided
             const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page if not provided
@@ -57,7 +57,7 @@ export default () => {
 	});
 
     // Create an exercise
-    router.post('/exercises', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
+    router.post('/', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
         try {
             const exercise = await Exercise.create(req.body);
             return res.json({
@@ -70,7 +70,7 @@ export default () => {
     });
 
     // Update an exercise
-    router.put('/exercises/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
+    router.put('/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
         try {
             const { id } = req.params;
             await Exercise.update(req.body, { where: { id } });
@@ -81,7 +81,7 @@ export default () => {
     });
 
     // Delete an exercise
-    router.delete('/exercises/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
+    router.delete('/:id', verify, ensureAdmin, async (req: Request, res: Response, _next: NextFunction) => {
         try {
             const { id } = req.params;
             await Exercise.destroy({ where: { id } });
@@ -112,7 +112,7 @@ export default () => {
         try {
             const completedExercises = await UserExercise.findAll({
             where: { userId: req.user!.id },
-            include: [Exercise]
+            include: [{ model: Exercise, as: 'exercise' }]
             });
             return res.json(completedExercises);
         } catch (error) {
