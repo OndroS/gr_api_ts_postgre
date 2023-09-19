@@ -4,6 +4,7 @@ import { models } from '../db';
 import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken';
 import i18n from 'i18n';
+import { register } from './../controllers/auth.controller'
 
 const router: Router = Router();
 
@@ -13,38 +14,40 @@ const {
 
 export default () => {
     // Registration Endpoint
-    router.post('/register', registerValidationRules(), validate, async (req: Request, res: Response, _next: NextFunction) => {
-        try {
-            const { name, surname, nickName, email, age, role, password } = req.body;
+    router.post('/register', registerValidationRules(), validate, register);
 
-            // Check if user already exists
-            const existingUser = await User.findOne({ where: { email } });
-            if (existingUser) {
-                return res.status(400).json({ message: i18n.__('user_already_exist')});
-            }
+    // router.post('/register', registerValidationRules(), validate, async (req: Request, res: Response, _next: NextFunction) => {
+    //     try {
+    //         const { name, surname, nickName, email, age, role, password } = req.body;
 
-            // Encrypt the password using CryptoJS and SECRET_KEY
-            const encryptedPassword = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY!).toString();
+    //         // Check if user already exists
+    //         const existingUser = await User.findOne({ where: { email } });
+    //         if (existingUser) {
+    //             return res.status(400).json({ message: i18n.__('user_already_exist')});
+    //         }
 
-            // Create the user
-            const user = await User.create({
-                name,
-                surname,
-                nickName,
-                email,
-                age,
-                role,
-                password: encryptedPassword
-            });
+    //         // Encrypt the password using CryptoJS and SECRET_KEY
+    //         const encryptedPassword = CryptoJS.AES.encrypt(password, process.env.SECRET_KEY!).toString();
 
-            return res.status(201).json({
-                message: i18n.__('registration_success'),
-                userId: user.id
-            });
-        } catch (error) {
-            _next(error);
-        }
-    });
+    //         // Create the user
+    //         const user = await User.create({
+    //             name,
+    //             surname,
+    //             nickName,
+    //             email,
+    //             age,
+    //             role,
+    //             password: encryptedPassword
+    //         });
+
+    //         return res.status(201).json({
+    //             message: i18n.__('registration_success'),
+    //             userId: user.id
+    //         });
+    //     } catch (error) {
+    //         _next(error);
+    //     }
+    // });
 
     // Login Endpoint
     router.post('/login', async (req: Request, res: Response, _next: NextFunction) => {

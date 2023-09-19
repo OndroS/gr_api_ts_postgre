@@ -8,14 +8,16 @@ import * as bodyParser from 'body-parser'
 import { sequelize } from './db'
 import ProgramRouter from './routes/programs'
 import ExerciseRouter from './routes/exercises'
-import AuthRouter from './routes/auth'
+import AuthRouter from './routes/auth.route'
 import UserRouter from './routes/user'
 import { localizationMiddleware } from './middleware/localizationMiddleware'
 import { errorHandlingMiddleware } from './middleware/errorHandling'
+import cors from 'cors'
 
 dotenv.config();
 
 const app = express()
+app.use(cors())
 
 app.use(localizationMiddleware);
 
